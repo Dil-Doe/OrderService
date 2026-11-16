@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.register('generateBuildInfo') {
+    def buildInfoFile = layout.projectDirectory.file('build-info.txt')
+
+    doLast {
+        def buildDate = new Date().format('yyyy-MM-dd')
+        buildInfoFile.asFile.text =
+                "Version: ${project.version}, Build date: ${buildDate}"
+    }
+}
+
+tasks.named('build') {
+    dependsOn tasks.named('generateBuildInfo')
+}
